@@ -34,6 +34,8 @@ Once that's done, we have the necessary credentials to connect to the network an
 
 Once connected to the network, we can run a nmap scan to find an attack surface and start exploiting it. We can also figure out the Domain name, in this case BECODE.local.
 
+[]()
+
 ## 2. LLMNR Poisoning
 
 ### What is LLMNR ?
@@ -57,6 +59,10 @@ Once we've managed to capture a hash, we'll have to try and crack it. We'll use 
 > hashcat -m 5600 ntlmhash.txt /usr/share/wordlists/rockyou.txt
 
 []()
+
+This wordlist didn't contain the password so we tried to bruteforce it. Unfortunately the password was long enough and it would require hashcat years to crack it on our machines. We even rented a server on DataCrunch equipped with 8 high-end GPUs to give it a more serious try but it was still taking too long.
+
+In the end what worked out was creating a custom wordlist containing different ways of writing an old password we had used during our training.
 
 ## 2a. SMB Relay Attack
 
@@ -90,13 +96,81 @@ Then we run ntlmrelayx (After puttin the ip addresses of the vulnerable machines
 
 > ntlmrelayx.py -tf targets.txt -smb2support
 
-We should get some hashes.
+If the attack succeeds on a target we'll end up with the machine's sam hashes. Those are linked to local users.
 
 []()
 
-Another way of attacking can be to launch our ntlmrelayx with the `-i` flag to straight up pop a shell and listen for it with netcat.
+Another way of attacking can be to launch our ntlmrelayx with the `-i` flag to straight up pop a samba shell and listen for it with netcat.
 
 > ntlmrelayx.py -tf targets.txt -smb2support -i
 > nc 127.0.0.1 11000
+
+This allows us to browse the file system or even download/upload files on it.
+
+[]()
+
+We can also try to execute commands through a relay attack.
+
+> ntlmrelayx.py -tf targets.txt -smb2support -c "whoami"
+
+We managed to execute this whoami command once at the very end of last week but when we tried again on Monday it wasn't working anymore. Actually a lot of attacks relying on samba were giving us an error. The elastik agent was maybe blocking us.
+
+## 2b. Gaining strong shell access
+
+We tried different scripts from the impacket-tools or msfconsole.
+
+> msfconsole ==> exploit/windows/smb/psexec
+> psexec.py lab.local/user:password@ip
+> smbexec.py lab.local/user:password@ip
+
+Those were not working but abusing the Windows Management Instrumentation did the trick:
+
+> wmiexec.py lab.local/user:password@ip
+
+[]()
+
+At this point we had ways to upload files on the system and execute commands. But our payload was systematically detected and removed. Moreover we couldn't execute powershell commands efficiently.
+
+## 3. Kerberoasting
+
+### What is Kerberoasting ?
+
+In such an attack, an authenticated domain user requests a Kerberos ticket for an Service Principal Name. The retrieved Kerberos ticket is encrypted with the hash of the service account password affiliated with the SPN. (An SPN is an attribute that ties a service to a user account within the AD). The goal is then to crack the hash obtained that way.
+
+Once the plaintext credentials of the service account are obtained, we can impersonate the account owner and inherit access to any systems, assets or networks granted to the compromised account.
+
+### Action
+
+We first try to request a ticket:
+
+> GetUserSPNs.py lab.local/user:password -dc-ip ip -request
+
+[]()
+
+This gets us a hash we can try to crack:
+
+> hashcat -m 13100 hash.txt /usr/share/wordlists/rockyou.txt -O
+
+But once again the password wasn't in this wordlist and bruteforcing it would take too long. A solution would be to try other wordlists or craft a custom one.
+
+## 4. Enumerating the domain
+
+That's when we switched to a situation where we wouldn't be considered as external attackers anymore. We used the domain user and password discovered on one of the windows 10 machines and simulate pentesting from the inside.
+
+Here we wanted to gather information about the domain. So we used powerview !
+
+> powershell -ep bypass
+> . .\PowerView.ps1
+
+[]()
+
+Amongst the commands that can get us interesting information we have:
+
+> Get-NetGroupMember "Domain Admins"
+> Get-NetUser | select samaccountname, description
+
+[]()
+
+We could see a user called SQL, wich had admin rights on the domain and had its password in the desscription. Service accounts with admin rights is apparently something you can come accross as a pentester and sometimes the password is written down in their desciption so they don't forget it. 
 
 
