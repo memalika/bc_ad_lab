@@ -22,7 +22,7 @@ We observe the network "ADSOC" where our target operates.
 
 The first step is to gain access to the wifi network and start operating from within.
 
-We used the alfa awus036acs. 
+We used the ALFA awus036acs. 
 
 ![alfa](./assets/alfa.jpg)
 
@@ -30,7 +30,7 @@ We're going perform a deauth attack that'll let us capture a 4 way handshake. Fo
 
 This tool is called Wifite, which lets us easily capture handshake and perform many other WiFi attacks beside deauth, such as Pin code, WPS attack, PMKID attack, etc...
 
-So first when launching wifite, we select the available interface, that is our ALFa usb.
+So first when launching wifite, we select the available interface, that is our ALFA usb.
 
 ![alfa2](./assets/wifite1.PNG)
 
@@ -138,6 +138,8 @@ if __name__ == "__main__":
 ```
 
 I have not been able to successfully get the login but with more time, as the script takes time, it will be a success.
+
+Also the bruteforce of the camera was breaking it's connection to the WiFi and so the stream that was on the PC.
 
 ## 2. LLMNR Poisoning
 
