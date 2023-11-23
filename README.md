@@ -215,6 +215,6 @@ Amongst the commands that can get us interesting information we have:
 
 ![GetNetUser](./assets/GetNetUser.PNG)
 
-We could see a user called SQL, wich had admin rights on the domain and had its password in the desscription. Service accounts with admin rights is apparently something you can come accross as a pentester and sometimes the password is written down in their desciption so they don't forget it. 
+We could see a user called SQL, which had admin rights on the domain and had its password in the desscription. Service accounts with admin rights is apparently something you can come accross as a pentester and sometimes the password is written down in their desciption so they don't forget it. 
 
 
