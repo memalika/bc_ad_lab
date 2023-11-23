@@ -296,3 +296,5 @@ We could see a user called SQL, which had admin rights on the domain and had its
 - [Stationx's Tutorial on Powershell Empire](https://www.stationx.net/how-to-use-powershell-empire/) - Tutorial of a great C2.
 - [Hacker Recipes' AD Movement Gitbook](https://www.thehacker.recipes/ad/movement) - Great info dump about many different movement techniques.
 - [HackTricks' AD Methodology](https://book.hacktricks.xyz/windows-hardening/active-directory-methodology) - Overall great information source, mostly to consolidate already acquired knowledge.
+- [TP-Link Tapo c200 Camera Unauthenticated RCE (CVE-2021-4045)](https://www.hacefresko.com/posts/tp-link-tapo-c200-unauthenticated-rce) - A guide on how to exploit the camera
+- [Github pwnTapo.py of the CVE script](https://github.com/hacefresko/CVE-2021-4045-PoC) The script to exploit it but work only on downgraded firmware
