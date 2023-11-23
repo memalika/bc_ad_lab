@@ -288,4 +288,11 @@ Amongst the commands that can get us interesting information we have:
 
 We could see a user called SQL, which had admin rights on the domain and had its password in the desscription. Service accounts with admin rights is apparently something you can come accross as a pentester and sometimes the password is written down in their desciption so they don't forget it. 
 
+# Ressources
 
+- [Cyber Mentor's Hacking AD for Beginners](https://www.youtube.com/watch?v=VXxH4n684HE) - The main ressource we used to set up a homelab and practice.
+- [CSbyGB's Attacking AD Gitbook](https://csbygb.gitbook.io/pentips/windows/attacking-ad) - Retranscription by chapter of the Cyber Mentor's AD for Beginners video.
+- [HackTheBox's AD Pentest Cheatsheet](https://www.hackthebox.com/blog/active-directory-penetration-testing-cheatsheet-and-guide) - Practical Cheatsheet and repository of AD pentesting tools.
+- [Stationx's Tutorial on Powershell Empire](https://www.stationx.net/how-to-use-powershell-empire/) - Tutorial of a great C2.
+- [Hacker Recipes' AD Movement Gitbook](https://www.thehacker.recipes/ad/movement) - Great info dump about many different movement techniques.
+- [HackTricks' AD Methodology](https://book.hacktricks.xyz/windows-hardening/active-directory-methodology) - Overall great information source, mostly to consolidate already acquired knowledge.
