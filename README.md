@@ -20,11 +20,32 @@ We observe the network "ADSOC" where our target operates.
 
 The first step is to gain access to the wifi network and start operating from within.
 
-We're gonna perform a Death Attack that'll let us capture a 4 way handshake. For that we'll use a tool that handles everything but alternatives would be to use airmon-ng, airreplay-ng and airodump-ng.
+We used the alfa awus036acs. 
 
-[]()
+![alfa](./img/alfa.jpg)
 
-Once we have a handshake, we can either run aircrack-ng with a wordlist to crack it or in our case, we'll run hashcat with the rockyou.txt wordlist to crack it.
+We're going perform a deauth attack that'll let us capture a 4 way handshake. For that we'll use a tool that handles everything but alternatives would be to use airmon-ng, airreplay-ng and airodump-ng.
+
+This tool is called Wifite, with that we can easily capture handshake and it can also do many different WiFi attacks beside deauth like Pin code, wps attack, PMKID attack...
+
+So first when launching wifite, we select the available interface, that is our ALFa usb.
+![alfa2](./img/wifite1.PNG)
+
+With airmon-ng we would have typed every command ourselves but here, we can see that the script does everything by itself, we just need to select which Acess point we want to attack.
+![alfa3](./img/wifite2.PNG)
+
+
+
+Wifite will then try to find every device connected to this AC and start a deauth attack on all of them.
+
+![alfa4](./img/wifite3.PNG)
+
+Once we have the handshake, wifite will try to crack the hash with some default common password, if it fails we need to convert the hash to be able to use it with hashcat.
+With the following comand :
+>$ hcxpcapngtool -o ADSOC-converted.hc22000 -E wordlist ADSOC.cap
+
+Here we use hashcat on windows so that it can use the GPU and be faster:
+>$ .\hashcat.exe -m 22000 .\ADSOC-converted.hc22000 -a 0 --kernel-accel=1 -w4 --force .\rockyou.txt
 
 []()
 
