@@ -76,7 +76,10 @@ Using fing I scanned the network to be sure what IP the camera has.
 
 ![scan](./assets/scan.png)
 
-So with the camera model and name I found multiple exploit and github projects.
+So with the camera model and name, TP-Link tapo C200 I found multiple exploit and github projects.
+
+![cam](./assets/cam.png)
+
 
 The first one is [pwntapo](https://github.com/hacefresko/CVE-2021-4045-PoC)
 
