@@ -164,12 +164,13 @@ As soon as we get on the network, the first thing we do is run Responder to pois
 ![responder2](./assets/responder2.PNG)
 ![responder3](./assets/responder3.PNG)
 
-
 Once we've managed to capture a hash, we'll have to try and crack it. We'll use hashcat again to do so.
 
 > hashcat -m 5600 ntlmhash.txt /usr/share/wordlists/rockyou.txt
 
 This wordlist didn't contain the password so we tried to bruteforce it. Unfortunately the password was long enough and it would require hashcat years to crack it on our machines. We even rented a server on DataCrunch equipped with 8 high-end GPUs to give it a more serious try but it was still taking too long.
+
+![hashcat_datacrunch](./assets/hashcat_datacrunch.png)
 
 In the end what worked out was creating a custom wordlist containing different ways of writing an old password we had used during our training.
 
